@@ -7,9 +7,13 @@
 <h2>@Model.Name</h2>
 <p>
     <ul>
+        <!-- Membership Type --> 
         <li>Membership Type: @Model.MembershipType.Name</li>
-        
-        @{//if customer birthday exists display it else display nothing }
+        <!-- diplay birthday if not null-->
+        @if (Model.Birthdate.HasValue)
+        {
+            <li>Birthday: @Model.Birthdate</li>
+                }
     </ul>
 </p>
 

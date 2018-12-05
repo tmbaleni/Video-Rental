@@ -15,5 +15,8 @@ namespace VidlyTest.Models
         public bool IsSubscribedToNewsLetter { get; set; }
         public MembershipType MembershipType { get; set; }
         public byte MembershipTypeId { get; set; }
+        [Display(Name = "Date of Birth")]
+        [Min18YearsOldIfMember]
+        public DateTime? Birthdate { get; set; }
     }
 }
