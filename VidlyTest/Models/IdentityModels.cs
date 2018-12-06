@@ -20,8 +20,10 @@ namespace VidlyTest.Models
 
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-        //represents custom table in database
+        //include customer table in database
         public DbSet<Customer> Customers { get; set; }
+        //include movies table in database
+        public DbSet<Movie> Movies { get; set; }
         
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)

@@ -23,7 +23,6 @@ namespace VidlyTest.Controllers
         // GET: Customers
         public ActionResult Index()
         {
-            ViewBag.Message = "Hello from customers controller";
             //add customers and their relations(//membershipType) from database
             var customers = _context.Customers.Include( c => c.MembershipType).ToList();
             return View(customers);

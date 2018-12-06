@@ -5,4 +5,13 @@
 }
 
 <h2>@Model.Name</h2>
+<!-- Display movie details Genre.Name, ReleaseDate, DateAdded, NumberInStock-->
+<p>
+    <ul>
+        <li>Genre: @Model.Genre.Name</li>
+        <li>Release Date: @Model.ReleaseDate</li>
+        <li>Added: @Model.DateAdded</li>
+        <li>Number in stock: @Model.NumberInStock</li>
+    </ul>
+</p>
 
