@@ -26,6 +26,8 @@ namespace VidlyTest.Models
         public DbSet<Movie> Movies { get; set; }
         //include membershiptype table
         public DbSet<MembershipType> MembershipTypes { get; set; }
+        //include Genres table
+        public DbSet<Genre> Genres { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
