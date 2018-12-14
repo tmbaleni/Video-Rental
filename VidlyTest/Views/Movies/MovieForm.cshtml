@@ -5,7 +5,14 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>MovieForm</h2>
+@if (Model.Id == 0)
+{
+    <h2>New Movie</h2>
+}
+else
+{
+    <h2>Edit Movie</h2>
+}
 @using (Html.BeginForm("Save", "Movies"))
 {
     @Html.ValidationSummary(true, "Please fix the following errors.")

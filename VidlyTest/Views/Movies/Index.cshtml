@@ -6,13 +6,16 @@
 }
 
 <h2>Movies</h2>
+@Html.ActionLink("New Movie", "New", "Movies", null, new { @class="btn btn-primary btn-lg"})
+<br />
 @if (!Model.Any())
 {
     <p>We don't have any Movies yet.</p>
 }
 else
 {
-<table class="table table-bordered table-hover">
+    <br />
+<table class="table table-bordered table-hover" style="margin-top: 5px;">
     <thead>
         <tr>
             <th>Movie</th>
