@@ -62,6 +62,8 @@ namespace VidlyTest.Controllers
 
             return View("MovieForm", viewModel);
         }
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public ActionResult Save(Movie movie)
         {
             if (!ModelState.IsValid)
