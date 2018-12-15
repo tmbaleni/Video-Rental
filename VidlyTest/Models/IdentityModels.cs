@@ -28,6 +28,8 @@ namespace VidlyTest.Models
         public DbSet<MembershipType> MembershipTypes { get; set; }
         //include Genres table
         public DbSet<Genre> Genres { get; set; }
+        //include Rental table
+        public DbSet<Rental> Rentals { get; set; }
 
         public ApplicationDbContext()
             : base("DefaultConnection", throwIfV1Schema: false)
