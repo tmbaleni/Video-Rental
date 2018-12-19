@@ -7,6 +7,13 @@
 <h2>Rentals</h2>
 @Html.ActionLink("New Rental", "New", "Rentals", null, new { @class = "btn btn-primary btn-lg" })
 <br />
+@using (Html.BeginForm())
+{
+    <p>
+        Find by name: @Html.TextBox("SearchString")
+        <input type="submit" value="Search" />
+    </p>
+}
 @if (!Model.Any())
 {
     <p>We don't have any Rentals yet.</p>
@@ -32,7 +39,7 @@ else
                     <td>@rental.DateRented</td>
                     <td>@rental.DateReturned</td>
                 </tr>
-            }
+                }
         </tbody>
     </table>
 }

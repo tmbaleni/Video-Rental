@@ -22,10 +22,38 @@ namespace VidlyTest.Controllers
             _context.Dispose();
         }
         // GET: Rentals
-        public ActionResult Index()
+        public ViewResult Index(string sortOrder, string searchString)
+        {
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            var rentals = from r in _context.Rentals.Include(c => c.Movie).Include(c => c.Customer)
+                          select r;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                rentals = rentals.Where(r => r.Customer.Name.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    rentals = rentals.OrderByDescending(r => r.Customer.Name );
+                    break;
+                default:
+                    rentals = rentals.OrderBy( r => r.Customer.Name);
+                    break;
+            }
+
+            return View(rentals.ToList());
+        }
+        /*[HttpPost]
+        public ActionResult Search(SearchViewModel model)
         {
             var rentals = _context.Rentals.Include(c => c.Movie).Include(c => c.Customer).ToList();
-            return View(rentals);
-        }
+            var viewModel = new SearchViewModel()
+            {
+                Genres = _context.Genres.ToList()
+            };
+
+            return View("Index",viewModel);
+        }*/
     }
 }
