@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using VidlyTest.Models;
 using VidlyTest.ViewModels;
 using System.Data.Entity;
+using PagedList;
 
 namespace VidlyTest.Controllers
 {
@@ -22,9 +23,20 @@ namespace VidlyTest.Controllers
             _context.Dispose();
         }
         // GET: Rentals
-        public ViewResult Index(string sortOrder, string searchString)
+        public ViewResult Index(string sortOrder, string currentFilter ,string searchString, int? page)
         {
             ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
 
             var rentals = from r in _context.Rentals.Include(c => c.Movie).Include(c => c.Customer)
                           select r;
@@ -42,7 +54,9 @@ namespace VidlyTest.Controllers
                     break;
             }
 
-            return View(rentals.ToList());
+            int pageSize = 7;
+            int pageNumber = (page ?? 1);
+            return View(rentals.ToPagedList(pageNumber, pageSize));
         }
         /*[HttpPost]
         public ActionResult Search(SearchViewModel model)
