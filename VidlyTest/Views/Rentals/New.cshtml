@@ -41,10 +41,12 @@
 
 @section scripts
 {
+    @Scripts.Render("~/bundles/jqueryval")
     <script>
         $(document).ready(function () {
             var vm = {
-                MovieIds: []
+                "CustomerId": 0,
+                "MovieIds": []
             };
             var customers = new Bloodhound({
                 datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
@@ -101,11 +103,12 @@
                 submitHandler: function () {
                     $.ajax({
                         url: "/Rentals/Create",
-                        method: "post",
+                        method: "POST",
                         data: vm
                     })
                     .done(function () {
                         toastr.success("Rentals successfully recorded.");
+                        console.log(vm);
 
                         $("#customer").typeahead("val", "");
                         $("#movie").typeahead("val", "");

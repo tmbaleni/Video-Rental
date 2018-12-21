@@ -64,7 +64,6 @@ namespace VidlyTest.Controllers
             return View();
         }
         [HttpPost]
-        //[ValidateAntiForgeryToken]
         public ActionResult Create(NewRental newRental)
         {
             var customer = _context.Customers.Single(
