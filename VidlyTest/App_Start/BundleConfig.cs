@@ -27,7 +27,8 @@ namespace VidlyTest
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap-lumen.css",
+                      "~/Content/bootstrap-superhero.css",
+                      "~/Content/navbar-fixed-side.css",
                       "~/Content/typeahead.css",
                       "~/Content/toastr.css",
                       "~/Content/site.css"));
