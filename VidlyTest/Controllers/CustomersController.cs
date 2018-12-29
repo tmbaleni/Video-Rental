@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using VidlyTest.Models;
 using VidlyTest.ViewModels;
+using PagedList;
 
 namespace VidlyTest.Controllers
 {
@@ -22,11 +23,40 @@ namespace VidlyTest.Controllers
             _context.Dispose();
         }
         // GET: Customers
-        public ActionResult Index()
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            //add customers and their relations(//membershipType) from database
-            var customers = _context.Customers.Include( c => c.MembershipType).ToList();
-            return View(customers);
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
+
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var customers = from c in _context.Customers.Include(c => c.MembershipType)
+                          select c;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                customers = customers.Where(r => r.Name.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    customers = customers.OrderByDescending(r => r.Name);
+                    break;
+                default:
+                    customers = customers.OrderBy(r => r.Name);
+                    break;
+            }
+
+            int pageSize = 7;
+            int pageNumber = (page ?? 1);
+            return View(customers.ToPagedList(pageNumber, pageSize));
         }
         public ActionResult Details(int id)
         {
@@ -90,6 +120,7 @@ namespace VidlyTest.Controllers
             };
             return View("CustomerForm", viewModel);
         }
+        [Authorize(Roles ="StoreManager")]
         public ActionResult Delete(int id)
         {
             var customerInDb = _context.Customers.SingleOrDefault(c => c.Id == id);

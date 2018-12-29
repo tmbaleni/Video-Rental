@@ -1,0 +1,98 @@
+﻿@model List<VidlyTest.Models.Report>
+@{
+    ViewBag.Title = "Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    int total = 0;
+}
+<div class="container-fluid">
+    <h2>Report</h2>
+    <div class="row">
+        Customer Membership Type distribution:
+        <table class="table table-bordered table-hover" style="margin-top: 5px;">
+            <thead>
+                <tr>
+                    <th>Membership Type</th>
+                    <th>Count </th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var report in Model)
+            {
+                    <tr>
+                        <td>
+                            @if (report.CategoryMembershipType == 1)
+                {
+                                <h6>Pay As You Go</h6>
+                            }@if (report.CategoryMembershipType == 2)
+                {
+                                <p>Monthly</p>
+                            }@if (report.CategoryMembershipType == 3)
+                {
+                                <p>Quarterly</p>
+                            }@if (report.CategoryMembershipType == 4)
+                {
+                                <p>Annually</p>
+                            }
+                        </td>
+                        <td> @report.Count </td>
+                    </tr>
+
+
+                    total += report.Count;
+                }
+            </tbody>
+        </table>
+    </div>
+    <div class="row"><p>Total:  @total</p></div>
+    <div class="row">
+        <div class="col-md-6">
+            <div class="row">
+                <button id="myButton" class="btn btn-primary">Get Popular movies</button>
+            </div>
+        </div>
+    </div>
+    <div class="row" padding-left="5px" padding-right="5px">
+        <div class="col-sm-4" id="movie-1"></div>
+        <div class="col-sm-4" id="movie-2"></div>
+        <div class="col-sm-4" id="movie-3"></div>
+    </div>
+</div>
+
+<div class="btn btn-default btn-sm">
+    @Html.ActionLink("Back to Report", "Index", "Rentals", null, null)
+</div>
+
+@section scripts
+{
+    <script>
+        $(document).ready(function () {
+            var movieRows = [];
+            $.ajax({
+                url: "/Api/reportApi",
+                method: "GET"
+            }).done(function (response) {
+                var data = response;
+                console.log(data);
+
+                var i = 0;
+
+                data.forEach((movie) => {
+                    
+                    var movieRow = "<div class='col-sm-4'>" + i + '. ' + movie + "</div>"
+                    movieRows.push(movieRow);
+                    i++;
+                });
+                console.log(movieRows);
+
+            })
+
+            $("#myButton").click(function () {
+                $("#movie-1").html(movieRows[1]).fadeIn(400);
+                $("#movie-2").html(movieRows[2]).fadeIn(400);
+                $("#movie-3").html(movieRows[3]).fadeIn(400);
+            });
+
+
+        });
+    </script>
+}

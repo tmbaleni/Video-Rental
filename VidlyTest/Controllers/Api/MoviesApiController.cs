@@ -17,7 +17,8 @@ namespace VidlyTest.Controllers.Api
         {
             _context = new ApplicationDbContext();
         }
-        public IHttpActionResult GetMovies(string query = null)
+        // GET /api/customers
+        public IEnumerable<Movie> GetMovies(string query = null)
         {
             var moviesQuery = _context.Movies
                 .Include(m => m.Genre)
@@ -28,7 +29,8 @@ namespace VidlyTest.Controllers.Api
 
             var moviesList = moviesQuery.ToList();
 
-            return Ok(moviesList);
+            return moviesList;
         }
+       
     }
 }

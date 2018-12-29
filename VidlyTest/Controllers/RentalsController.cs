@@ -91,8 +91,7 @@ namespace VidlyTest.Controllers
 
             return RedirectToAction("Index", "Rentals");
         }
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [Authorize(Roles = "StoreManager")]
         public ActionResult Delete(int id)
         {
             try
@@ -108,16 +107,54 @@ namespace VidlyTest.Controllers
             }
             return RedirectToAction("Index");
         }
-        /*[HttpPost]
-        public ActionResult Search(SearchViewModel model)
+        public ActionResult Return(int id)
         {
-            var rentals = _context.Rentals.Include(c => c.Movie).Include(c => c.Customer).ToList();
-            var viewModel = new SearchViewModel()
+                var rentalInDb = _context.Rentals.Include(r => r.Movie).Include(r => r.Customer).SingleOrDefault(m => m.Id == id);
+            if (rentalInDb == null)
             {
-                Genres = _context.Genres.ToList()
-            };
+                return HttpNotFound();
+            }
+            else
+            {
+                rentalInDb.DateReturned = DateTime.Now;
+                var movieId = rentalInDb.Movie.Id;
+                var movieInDb = _context.Movies.Single(m => m.Id == movieId);
+                movieInDb.NumberAvailable--;
+                //_context.Rentals.SqlQuery();
 
-            return View("Index",viewModel);
-        }*/
-    }
+            }
+                _context.SaveChanges();
+
+            return RedirectToAction("Index","Home");
+        }
+        [Authorize(Roles = "StoreManager")]
+        public ActionResult Report()
+        {
+            List<Customer> customers = _context.Customers.Include(c => c.MembershipType).ToList();
+            var membershipTypeCountsQuery =
+            from p in customers
+            group p by p.MembershipTypeId into g
+            select new { CategoryMembershipType = g.Key, Count = g.Count() };
+
+            var membershipTypeCounts = membershipTypeCountsQuery.ToList();
+            var listCount = membershipTypeCounts.Count();
+
+            List<Report> reportList = new List<Report>();
+                
+                
+            for (int i = 0; i < listCount; i++)
+            {
+                var item = new Report
+                {
+                    CategoryMembershipType = membershipTypeCounts[i].CategoryMembershipType,
+                    Count = membershipTypeCounts[i].Count
+                };
+                reportList.Add(item);
+                
+            }
+
+            return View("Report", reportList);
+        }
+
+        }
 }

@@ -1,4 +1,5 @@
-﻿@model IEnumerable<VidlyTest.Models.Movie>
+﻿@model PagedList.IPagedList<VidlyTest.Models.Movie>
+@using PagedList.Mvc;
 
 @{
     ViewBag.Title = "Index";
@@ -6,7 +7,21 @@
 }
 
 <h2>Movies</h2>
-@Html.ActionLink("New Movie", "New", "Movies", null, new { @class="btn btn-primary btn-lg"})
+<div class="row">
+<div class="col-sm-12">
+@Html.ActionLink("New Movie", "New", "Movies", null, new { @class="btn btn-primary btn-md"})
+<br />
+</div>
+</div>
+@using (Html.BeginForm())
+{
+    
+        <div class="col-sm-12">
+            <br/>
+            @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" class="btn btn-danger"/>
+        </div>
+}
 <br />
 @if (!Model.Any())
 {
@@ -20,16 +35,32 @@ else
         <tr>
             <th>Movie</th>
             <th>Genre</th>
+            <th>Number Available</th>
+            <th>Action</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var movie in Model)
         {
             <tr>
-                <td>@Html.ActionLink(movie.Name, "Details", "Movies", new { id = movie.Id }, null)</td>
+                <td>@movie.Name</td>
                 <td>@movie.Genre.Name</td>
+                <td>@movie.NumberAvailable</td>
+                <td>
+                    <div class="btn btn-default">
+                        @Html.ActionLink("Details", "Details", "Movies", new { id = movie.Id }, null)
+                    </div>
+                    <div class="btn btn-warning">
+                        @Html.ActionLink("Edit", "Edit", "Movies", new { id = movie.Id }, null)
+                    </div>
+                </td>
             </tr>
         }
     </tbody>
 </table>
 }
+<br />
+ Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+@Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))

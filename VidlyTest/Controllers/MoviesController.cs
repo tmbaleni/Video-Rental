@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using VidlyTest.Models;
+using PagedList;
 using VidlyTest.ViewModels;
 using System.Data.Entity;
 
@@ -22,12 +23,39 @@ namespace VidlyTest.Controllers
             _context.Dispose();
         }
         // GET: Movies
-        public ActionResult Index()
+        public ViewResult Index(string sortOrder, string currentFilter, string searchString, int? page)
         {
-            //add movies and their relations(//Genre) from database
-            var movies = _context.Movies.Include(c => c.Genre).ToList();
-            return View(movies);
+            ViewBag.NameSortParm = String.IsNullOrEmpty(sortOrder) ? "name_desc" : "";
 
+            if (searchString != null)
+            {
+                page = 1;
+            }
+            else
+            {
+                searchString = currentFilter;
+            }
+
+            ViewBag.CurrentFilter = searchString;
+
+            var movies = from m in _context.Movies.Include(c => c.Genre) 
+                          select m;
+            if (!String.IsNullOrEmpty(searchString))
+            {
+                movies = movies.Where(m => m.Name.Contains(searchString));
+            }
+            switch (sortOrder)
+            {
+                case "name_desc":
+                    movies = movies.OrderByDescending(m => m.Name);
+                    break;
+                default:
+                    movies = movies.OrderBy(m => m.Name);
+                    break;
+            }
+            int pageSize = 7;
+            int pageNumber = (page ?? 1);
+            return View(movies.ToPagedList(pageNumber, pageSize));
         }
         public ActionResult Details(int id)
         {
@@ -93,6 +121,18 @@ namespace VidlyTest.Controllers
 
             _context.SaveChanges();
 
+            return RedirectToAction("Index", "Movies");
+        }
+        [Authorize(Roles = "StoreManager")]
+        public ActionResult Delete(int id)
+        {
+            var movieInDb = _context.Movies.Include(c => c.Genre ).SingleOrDefault(c => c.Id == id);
+
+            if (movieInDb == null)
+                return HttpNotFound();
+
+            _context.Movies.Remove(movieInDb);
+            _context.SaveChanges();
             return RedirectToAction("Index", "Movies");
         }
     }

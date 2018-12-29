@@ -1,10 +1,26 @@
-﻿@model IEnumerable<VidlyTest.Models.Customer>
+﻿@model PagedList.IPagedList<VidlyTest.Models.Customer>
+@using PagedList.Mvc;
 @{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
 <h2>Customers</h2>
+<div class="row">
+    <div class="col-sm-12">
+        @Html.ActionLink("New Customer", "New", "Customers", null, new { @class = "btn btn-primary" })
+        <br />
+    </div>
+</div>
+
+@using (Html.BeginForm())
+{
+    <div class="col-sm-12">
+        <br />
+        @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+        <input type="submit" value="Search" class="btn btn-danger"/>
+    </div>
+}
 @if (!Model.Any())
 {
     <p>We don't have any customers yet.</p>
@@ -23,15 +39,23 @@ else
             @foreach (var customer in Model)
             {
                 <tr>
-                    <td>@Html.ActionLink(customer.Name, "Details", "Customers", new { id = customer.Id }, null)</td>
+                    <td>@customer.Name</td>
                     <td>@customer.MembershipType.Name</td>
                     <td>
-                        @Html.ActionLink("View", "Details", "Customers", new { id = customer.Id }, null)
-                        @Html.ActionLink("Edit", "Edit", "Customers", new { id = customer.Id }, null)
+                        <div class="btn btn-default">
+                            @Html.ActionLink("Details", "Details", "Customers", new { id = customer.Id }, null)
+                        </div>
+                        <div class="btn btn-warning">
+                            @Html.ActionLink("Edit", "Edit", "Customers", new { id = customer.Id }, null)
+                        </div>
                     </td>
                 </tr>
             }
         </tbody>
     </table>
 }
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+
+    @Html.PagedListPager(Model, page => Url.Action("Index",
+    new { page, sortOrder = ViewBag.CurrentSort, currentFilter = ViewBag.CurrentFilter }))
 

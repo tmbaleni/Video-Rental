@@ -6,45 +6,65 @@
 }
 
 <h2>Rentals</h2>
-@Html.ActionLink("New Rental", "New", "Rentals", null, new { @class = "btn btn-primary btn-lg" })
-<br />
-@using (Html.BeginForm())
-{
-    <p>
-        Find by name: @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
-        <input type="submit" value="Search" />
-    </p>
-}
-@if (!Model.Any())
-{
-    <p>We don't have any Rentals yet.</p>
-}
-else
-{
-    <br />
-    <table class="table table-bordered table-hover" style="margin-top: 5px;">
-        <thead>
-            <tr>
-                <th>Customer Name</th>
-                <th>Movie </th>
-                <th>Date Rented</th>
-                <th>Date Returned</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var rental in Model)
-            {
+<div class="row">
+    <div class="col-sm-6">
+        @Html.ActionLink("New Rental", "New", "Rentals", null, new { @class = "btn btn-primary" })
+        @Html.ActionLink("Report Info", "Report", "Rentals", null, new { @class = "btn btn-success" })
+        <br/>
+    </div>
+</div>
+    @using (Html.BeginForm())
+    {
+        <div class="col-sm-12">
+            <br/>
+            @Html.TextBox("SearchString", ViewBag.CurrentFilter as string)
+            <input type="submit" value="Search" class="btn btn-danger" />
+            <br/>
+        </div>
+
+
+    }
+    @if (!Model.Any())
+    {
+        <p>We don't have any Rentals yet.</p>
+    }
+    else
+    {
+        <br />
+        <table class="table table-bordered table-hover" style="margin-top: 5px;">
+            <thead>
                 <tr>
-                    <td>@rental.Customer.Name</td>
-                    <td>@rental.Movie.Name</td>
-                    <td>@rental.DateRented</td>
-                    <td>@rental.DateReturned</td>
+                    <th>Customer Name</th>
+                    <th>Movie </th>
+                    <th>Date Rented</th>
+                    <th>Date Returned</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-    <br />
-}
+            </thead>
+            <tbody>
+                @foreach (var rental in Model)
+                {
+                    <tr>
+                        <td>@rental.Customer.Name</td>
+                        <td>@rental.Movie.Name</td>
+                        <td>@rental.DateRented</td>
+                        <td>
+                            @if (rental.DateReturned.HasValue)
+                            {
+                                @rental.DateReturned;
+                            }
+                            else
+                            {
+                                <div class="btn btn-warning">
+                                    @Html.ActionLink("Mark As Returned", "Return", "Rentals", new { id = rental.Id }, null)
+                                </div>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <br />
+    }
     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
 
     @Html.PagedListPager(Model, page => Url.Action("Index",
