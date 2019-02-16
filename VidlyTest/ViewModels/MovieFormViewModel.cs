@@ -30,6 +30,7 @@ namespace VidlyTest.ViewModels
         [Required]
         public byte? NumberInStock { get; set; }
 
+
         public MovieFormViewModel()
         {
             Id = 0;
@@ -41,6 +42,7 @@ namespace VidlyTest.ViewModels
             Name = movie.Name;
             ReleaseDate = movie.ReleaseDate;
             NumberInStock = movie.NumberInStock;
+
             GenreId = movie.GenreId;
         }
     }

@@ -3,7 +3,10 @@
 }
 
 <div class="jumbotron">
-    <h1>Video Rentals</h1>
+    <h1>Welcome to Solice Video Rentals</h1><br />
+    <p>
+        An ASP .NET project build by Happy Tabo Mbaleni(2016326660162) and Thembelihle Grace Tshuma(2016326660119) for Prof. Luo Fei <br />
+    Course: Windows Programming</p>
 </div>
 
 <div class="row">
@@ -13,17 +16,17 @@
         </div>
     </div>
 </div>
-        <div class="row" padding-left="5px" padding-right="5px">
-            <div class="col-sm-4" id="movie-1" ></div>
-            <div class="col-sm-4" id="movie-2" ></div>
-            <div class="col-sm-4" id="movie-3"></div>
-        </div>
-        <div class="row" padding-left="5px" padding-right="5px">
-            <div class="col-sm-4 " id="movie-4"></div>
-            <div class="col-sm-4" id="movie-5"></div>
-            <div class="col-sm-4" id="movie-6"></div>
-        </div>
-    
+<div class="row" padding-left="5px" padding-right="5px">
+    <div class="col-sm-4" id="movie-1"></div>
+    <div class="col-sm-4" id="movie-2"></div>
+    <div class="col-sm-4" id="movie-3"></div>
+</div>
+<div class="row" padding-left="5px" padding-right="5px">
+    <div class="col-sm-4 " id="movie-4"></div>
+    <div class="col-sm-4" id="movie-5"></div>
+    <div class="col-sm-4" id="movie-6"></div>
+</div>
+
 
 @section scripts
 {
@@ -37,14 +40,14 @@
                 var data = response.results;
                 console.log(data);
 
-                
+
                 data.forEach((movie) => {
                     movie.poster_src = "http://image.tmdb.org/t/p/w342" + movie.poster_path;
                     var movieRow = "<img src='" + movie.poster_src + "' width='100%' />"
                     movieRows.push(movieRow);
                 });
                 console.log(movieRows);
-                
+
             })
 
             $("#myButton").click(function () {
@@ -55,8 +58,8 @@
                 $("#movie-5").html(movieRows[5]).fadeIn(400);
                 $("#movie-6").html(movieRows[6]).fadeIn(400);
             });
-            
-           
+
+
         });
     </script>
 }
